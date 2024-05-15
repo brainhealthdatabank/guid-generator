@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/guid-generator/static/css/main.e6c13ad2.css",
+    "main.js": "/guid-generator/static/js/main.76c6f79a.js",
+    "static/js/453.4f8ae617.chunk.js": "/guid-generator/static/js/453.4f8ae617.chunk.js",
+    "static/media/dataflow.drawio.svg": "/guid-generator/static/media/dataflow.drawio.c0d9ee59963b5a820836e56ecd47f8ea.svg",
+    "index.html": "/guid-generator/index.html",
+    "static/media/Introduction.md": "/guid-generator/static/media/Introduction.73f6b74545dc088912c6.md",
+    "main.e6c13ad2.css.map": "/guid-generator/static/css/main.e6c13ad2.css.map",
+    "main.76c6f79a.js.map": "/guid-generator/static/js/main.76c6f79a.js.map",
+    "453.4f8ae617.chunk.js.map": "/guid-generator/static/js/453.4f8ae617.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.76c6f79a.js"
+  ]
+}
