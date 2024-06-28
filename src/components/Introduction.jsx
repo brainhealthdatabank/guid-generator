@@ -19,7 +19,7 @@ class Introduction extends Component {
 
     return (
       <div>
-        <ReactMarkdown>{markdown}</ReactMarkdown>;
+        <ReactMarkdown>{markdown}</ReactMarkdown>
       </div>
     
     );
