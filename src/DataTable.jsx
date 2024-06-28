@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tab, TextField, Button } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Grid, IconButton, Tabs, Tab, TextField, Button } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { CloudDownload as CloudDownloadIcon } from '@mui/icons-material';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { computeHashes, handleFileRead, handleSheetLoad } from './utils';
+import { computeHashes } from './utils';
 import HashColumnsSelection from './components/HashColumnsSelection';
-//import ColumnSelection from './ColumnSelection';
 import ParticipantIdColumnSelection from './components/ParticipantIdColumnSelection';
+import SheetSelection from './components/SheetSelection';
+import DragAndDrop from './components/DragAndDrop';
 
 function DataTable() {
   const [data, setData] = useState([]);
@@ -15,11 +16,15 @@ function DataTable() {
   const [hashedData, setHashedData] = useState([]);
   const [tabValue, setTabValue] = useState(0);
   const [workbook, setWorkbook] = useState(null);
-  const [sheetName, setSheetName] = useState('');
-  const [headerRow, setHeaderRow] = useState(1);
   const [selectedColumns, setSelectedColumns] = useState(new Set());
   const [participantIdColumn, setParticipantIdColumn] = useState('');
-  const [fileName, setFileName] = useState('');
+
+
+  const handleWorkbookChange = (newWorkbook) => {
+    setWorkbook(newWorkbook);
+    console.log('Workbook set: ', newWorkbook);
+  };
+
 
   const handleColumnSelectionChange = (event) => {
     const columnKey = event.target.name;
@@ -34,13 +39,16 @@ function DataTable() {
     });
   };
 
+
   const handleParticipantIdChange = (event) => {
     setParticipantIdColumn(event.target.value);
   };
 
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
 
   const downloadExcel = () => {
     // Preprocess the data: Convert every entry to string and prepend with '\t' to force Excel to interpret it as text
@@ -97,29 +105,22 @@ function DataTable() {
 
   return (
     <div>
-      <div>
-        Step 1: Drag and drop as Excel file here.
-      </div>
-      <div onDragOver={(e) => e.preventDefault()} onDrop={e => handleFileRead(e, setWorkbook, setFileName)} style={{ width: '100%', height: '100px', border: '2px dashed #ccc', margin: '20px 0', padding: '10px', textAlign: 'center' }}>
-        Drag and drop an Excel file here
-        {fileName && <p>Loaded File: {fileName}</p>}
-      </div>
-      <div>
-        Step 2: Select the sheet that contains the participant information and the consent information.
-        )
-      </div>
-      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '10px' }}>
-        <TextField label="Sheet Name" variant="outlined" value={sheetName} onChange={(e) => setSheetName(e.target.value)} />
-        <TextField label="Header Row" variant="outlined" type="number" value={headerRow} onChange={(e) => setHeaderRow(parseInt(e.target.value, 10))} />
-        <Button size="small" variant="contained" onClick={() => handleSheetLoad(workbook, sheetName, headerRow, setData, setColumns, setParticipantIdColumn)} style={{ alignSelf: 'flex-start' }}>Load Sheet</Button>
-      </Box>
+      <DragAndDrop handleWorkbookChange={handleWorkbookChange}/>
+      {workbook && (
+        <SheetSelection
+          workbook={workbook}
+          setData={setData}
+          setColumns={setColumns}
+          setParticipantIdColumn={setParticipantIdColumn}
+        />
+      )}
       {columns.length > 0 && (
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <HashColumnsSelection title="Step 3: Select Columns for Hash Calculation" columns={columns} selectedColumns={selectedColumns} handleChange={handleColumnSelectionChange} />
+            <HashColumnsSelection columns={columns} selectedColumns={selectedColumns} handleChange={handleColumnSelectionChange} />
           </Grid>
           <Grid item xs={6}>
-            <ParticipantIdColumnSelection title="Step 4; Select Participant ID Column" columns={columns} participantIdColumn={participantIdColumn} handleChange={handleParticipantIdChange} />
+            <ParticipantIdColumnSelection columns={columns} participantIdColumn={participantIdColumn} handleChange={handleParticipantIdChange} />
           </Grid>
         </Grid>
       )}

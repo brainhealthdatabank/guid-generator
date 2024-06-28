@@ -1,18 +1,20 @@
 import * as XLSX from 'xlsx';
 import CryptoJS from 'crypto-js';
 
-export const handleFileRead = (event, setWorkbook, setFileName) => {
-  event.preventDefault();
-  const files = event.dataTransfer.files;
-  if (files && files[0]) {
+
+export const handleFileRead = (files, handleWorkbookChange, setFileName) => {
+  if (files.length > 0) {
     const file = files[0];
-    setFileName(file.name); // Update the file name
+    setFileName(file.name);
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      setWorkbook(wb); // Store the workbook object for later use
+    reader.onload = (loadEvent) => {
+      const binaryStr = loadEvent.target.result;
+      const workbook = XLSX.read(binaryStr, { type: 'binary' });
+      handleWorkbookChange(workbook);
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsBinaryString(file);
+  } else {
+    console.error('No file loaded');
   }
 };
 
