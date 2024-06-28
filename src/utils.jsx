@@ -60,7 +60,7 @@ export const computeHashes = (data, selectedColumns, participantIdColumn, setHas
       .map(key => row[key])
       .join('');
 
-    const hash = CryptoJS.SHA1(rowData).toString(CryptoJS.enc.Hex);
+    const hash = CryptoJS.SHA256(rowData).toString(CryptoJS.enc.Hex);
 
     // Prepare the new row for the "Hashed Data" tab
     let newRow = {
