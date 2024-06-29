@@ -37,14 +37,16 @@ const DragAndDrop = ({ handleWorkbookChange }) => {
         }}
         style={{ width: '100%', height: '100px', border: '2px dashed #ccc', margin: '20px 0', padding: '10px', textAlign: 'center' }}
       >
-        Drag and drop an Excel file here or click to select.
-        <input
-          type="file"
-          onChange={(e) => handleFileRead(e.target.files, setWorkbook, setFileName)}
-          style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, opacity: 0, cursor: 'pointer' }}
-          accept=".xlsx,.xls"
-        />
-        {fileName && <p>{fileName}</p>}
+        <label style={{ position: 'relative', display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}>
+          Drag and drop an Excel file here or click to select.
+          <input
+            type="file"
+            onChange={(e) => handleFileRead(e.target.files, setWorkbook, setFileName)}
+            style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, opacity: 0, cursor: 'pointer' }}
+            accept=".xlsx,.xls"
+          />
+          {fileName && <p>{fileName}</p>}
+        </label>
       </div>
     </div>
   );
@@ -53,5 +55,5 @@ const DragAndDrop = ({ handleWorkbookChange }) => {
 DragAndDrop.propTypes = {
     handleWorkbookChange: PropTypes.func.isRequired,
   };
-  
+
 export default DragAndDrop;

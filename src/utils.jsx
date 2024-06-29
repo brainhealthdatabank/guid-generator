@@ -59,21 +59,21 @@ export const computeHashes = (data, selectedColumns, participantIdColumn, setHas
 
     // create rowData by iterating over sorted selected column names
     const rowData = sortedSelectedColumns
-      .map(key => row[key])
+      .map(key => String(row[key]).trim())
       .join('');
 
     const hash = CryptoJS.SHA256(rowData).toString(CryptoJS.enc.Hex);
 
     // Prepare the new row for the "Hashed Data" tab
     let newRow = {
-      participant_id: row[participantIdColumn],
+      participant_id: String(row[participantIdColumn]).trim(),
       hash
     };
 
     // Include all other columns not selected for hashing
     Object.keys(row).forEach(key => {
       if (!selectedColumns.has(key) && key !== participantIdColumn) {
-        newRow[key] = row[key];
+        newRow[key] = String(row[key]).trim();
       }
     });
 
