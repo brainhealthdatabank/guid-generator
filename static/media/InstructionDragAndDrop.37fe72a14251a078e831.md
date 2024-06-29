@@ -1,0 +1,2 @@
+### Step 1: Drag and Drop Participant Mapping File
+Drag and drop or click to select your completed participant mapping file.  If you do not have a completed mapping file, you can complete the following template and submit here: [Participant Mapping Template](https://github.com/username/repository/raw/main/path/to/your/template.xlsx)
