@@ -52,35 +52,41 @@ export const handleSheetLoad = (workbook, sheetName, headerRow, setData, setColu
 };
 
 export const computeHashes = (data, selectedColumns, participantIdColumn, setHashedData) => {
-  const newData = data.map(row => {
-
-    // Sort the selected column names alphabetically
-    const sortedSelectedColumns = Array.from(selectedColumns).sort();
-
-    // create rowData by iterating over sorted selected column names
-    const rowData = sortedSelectedColumns
-      .map(key => String(row[key]).trim())
-      .join('');
-
-    const hash = CryptoJS.SHA256(rowData).toString(CryptoJS.enc.Hex);
-
-    // Prepare the new row for the "Hashed Data" tab
-    let newRow = {
-      participant_id: String(row[participantIdColumn]).trim(),
-      hash
-    };
-
-    // Include all other columns not selected for hashing
-    Object.keys(row).forEach(key => {
-      if (!selectedColumns.has(key) && key !== participantIdColumn) {
-        newRow[key] = String(row[key]).trim();
-      }
+    // Filter out empty rows before processing
+    const filteredData = data.filter(row => {
+      // Check if the row has any meaningful data
+      return Object.keys(row).length > 0 && 
+             // Additional check to ensure the row has at least some data in the selected columns
+             Array.from(selectedColumns).some(key => row[key] && String(row[key]).trim() !== '');
     });
-
-    return newRow;
-    
-  });
-
-  // Update the state or perform further operations with the new hashed data
-  setHashedData(newData);
-};
+  
+    const newData = filteredData.map(row => {
+      // Sort the selected column names alphabetically
+      const sortedSelectedColumns = Array.from(selectedColumns).sort();
+  
+      // create rowData by iterating over sorted selected column names
+      const rowData = sortedSelectedColumns
+        .map(key => String(row[key] || '').trim())
+        .join('');
+  
+      const hash = CryptoJS.SHA256(rowData).toString(CryptoJS.enc.Hex);
+  
+      // Prepare the new row for the "Hashed Data" tab
+      let newRow = {
+        participant_id: String(row[participantIdColumn] || '').trim(),
+        hash
+      };
+  
+      // Include all other columns not selected for hashing
+      Object.keys(row).forEach(key => {
+        if (!selectedColumns.has(key) && key !== participantIdColumn) {
+          newRow[key] = String(row[key] || '').trim();
+        }
+      });
+  
+      return newRow;
+    });
+  
+    // Update the state or perform further operations with the new hashed data
+    setHashedData(newData);
+  };
